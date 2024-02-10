@@ -4,7 +4,6 @@
 PVOID KeGetSystemModuleBase(const char* mName) {
 	ULONG bytes = 0;
 	NTSTATUS status = ZwQuerySystemInformation(SystemModuleInformation, NULL, bytes, &bytes);
-	DbgPrintEx(0, 0, "%x, %d", status, bytes);
 
 	if (!bytes) return NULL;
 
@@ -12,16 +11,12 @@ PVOID KeGetSystemModuleBase(const char* mName) {
 	PRTL_PROCESS_MODULE_INFORMATION module_arr = modules->Modules;
 
 	status = ZwQuerySystemInformation(SystemModuleInformation, modules, bytes, &bytes);
-	DbgPrintEx(0, 0, "%x", status);
 
 	if (!NT_SUCCESS(status)) return NULL;
-
-	DbgPrintEx(0, 0, "%x", modules->NumberOfModules);
 
 	PVOID module_base = 0;
 
 	for (ULONG i = 0; i < modules->NumberOfModules; i++) {
-		DbgPrintEx(0, 0, "%s", module_arr[i].FullPathName);
 		if (!strcmp((char*)module_arr[i].FullPathName, mName)) {
 			module_base = module_arr[i].ImageBase;
 		}

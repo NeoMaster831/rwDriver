@@ -12,7 +12,6 @@ bool CallKernelFunction(void* addr) {
 	function = reinterpret_cast<PVOID*>(KeGetSystemModuleExport(
 		"\\SystemRoot\\System32\\drivers\\dxgkrnl.sys",
 		"NtQueryCompositionSurfaceStatistics"));
-	DbgPrintEx(0, 0, "%p", function);
 	origFunc = (NTSTATUS(*)(HANDLE _1, uintptr_t _2))function;
 
 	if (!function) return false;
@@ -35,8 +34,6 @@ NTSTATUS HookFunction(
 	HANDLE a1,
 	uintptr_t a2
 ) {
-
-	DbgPrintEx(0, 0, "Hook Called!");
 	auto cvrt = (PUSERMODE_COMMAND)a1;
 	if (!MmIsAddressValid(a1) || cvrt->magic != MAGIC) {
 		WriteMemoryRO(function, &original, sizeof(original));
@@ -45,9 +42,6 @@ NTSTATUS HookFunction(
 		DbgPrintEx(0, 0, "Return");
 		return ret;
 	}
-	 
-	DbgPrintEx(0, 0, "It is MY FUCTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %p", a1);
-	DbgPrintEx(0, 0, "HookFunction: %p", HookFunction);
 
 	if (cvrt->mode == Read) { // Return: Read Data
 		auto args = (PREAD_CMD_ARGS)(cvrt->arg);

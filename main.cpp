@@ -6,11 +6,10 @@ extern "C" NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT driver_object, PUNICODE_STRI
 
 	DbgPrintEx(0, 0, "Can you hear me?");
 	if (CallKernelFunction(HookFunction)) {
-		DbgPrintEx(0, 0, "Success!!!!!!WOW!!!!!!");
-		origFunc((HANDLE)1, 200);
+		DbgPrintEx(0, 0, "Success.");
 	}
 	else {
-		DbgPrintEx(0, 0, "L");
+		DbgPrintEx(0, 0, "Failed.");
 	}
 	return STATUS_SUCCESS;
 }
